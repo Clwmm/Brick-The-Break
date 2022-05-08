@@ -8,10 +8,11 @@ Ball::Ball(float _x, float _y)
 	x = _x;
 	y = _y;
 	r = sprite.getTexture()->getSize().y/2;
+
 	height = sprite.getTexture()->getSize().y;
 	width = sprite.getTexture()->getSize().x;
 	speed = 300; //230
-	angle = Functions::fromRandom(200, 340);
+	angle = (rand() % 141) + 200;  //Functions::fromRandom(200, 340);
 	mx = cos(angle * DEGTORAD) * speed;
 	my = sin(angle * DEGTORAD) * speed;
 }

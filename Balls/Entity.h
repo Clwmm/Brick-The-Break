@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Functions.h"
 #include "TextureManager.h"
 
 #define DEGTORAD 0.017453

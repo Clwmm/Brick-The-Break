@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Ball.h"
 
-enum class GameStatus { mainMenu, chooselevel, game};
+enum class GameStatus { logo, mainMenu, chooselevel, game};
 enum class MainMenuStatus { play, exit };
 enum class End { win, lose, normal};
 
@@ -14,7 +14,7 @@ class Game
 {
 private:
 	sf::RenderWindow* window;
-	GameStatus status = GameStatus::mainMenu;
+	GameStatus status = GameStatus::logo;
 	MainMenuStatus mmstatus = MainMenuStatus::play;
 	End endstatus = End::normal;
 	sf::Font* font = new sf::Font;
@@ -42,8 +42,10 @@ public:
 private:
 	bool render = false;
 	bool counting = false;
+	bool first = true;
 public:
 	void start();
+	void logoloading();
 	void mainMenu();
 	void chooselevel(); 
 	void game();

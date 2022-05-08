@@ -4,7 +4,7 @@ PowerUp::PowerUp(sf::Vector2f _position)
 {
 	name = EnName::powerup;
 
-	int a = Functions::fromRandom(0,100);
+	int a = rand();
 	if (a % 3 == 1)
 	{
 		type = PUType::str;

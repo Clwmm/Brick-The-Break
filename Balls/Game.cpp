@@ -114,29 +114,111 @@ void Game::player_colision(Entity* a, Entity* b)
 
 void Game::start()
 {
-	while (window->isOpen())
+	while (!close)
 	{
 		switch (status)
 		{
+		case GameStatus::logo:
+			logoloading();
+			break;
 		case GameStatus::mainMenu:
 			mainMenu();
-			if (close)
-				return;
 			break;
 		case GameStatus::chooselevel:
 			chooselevel();
 			break;
 		case GameStatus::game:
 			game();
-			if (close)
-				return;
 			break;
+		}
+	}
+}
+
+void Game::logoloading()
+{
+	//window = new sf::RenderWindow(sf::VideoMode(670, 200), "Brick the Break", sf::Style::None);
+	float a = 0;
+	float fadecolor = 255;
+	sf::Sprite logo;
+	logo.setTexture(*TextureManager::AcquireTexture("res/logo.png"));
+	logo.setOrigin(sf::Vector2f(logo.getTexture()->getSize().x / 2, logo.getTexture()->getSize().y / 2));
+	logo.setPosition(window->getSize().x / 2, window->getSize().y / 2);
+
+	/*window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	window->setFramerateLimit(240);
+	window->display();*/
+
+	sf::Event evnt;
+
+	float deltatime = 0;
+
+	clock.restart().asSeconds();
+
+	while (window->isOpen())
+	{
+		deltatime = clock.restart().asSeconds();
+		while (window->pollEvent(evnt))
+		{
+			switch (evnt.type)
+			{
+			case sf::Event::Closed:
+				close = true;
+				window->close();
+				delete window;
+				return;
+			case sf::Event::KeyPressed:
+				if (evnt.key.code == sf::Keyboard::Escape)
+				{
+					close = true;
+					window->close();
+					delete window;
+					return;
+				}
+				else
+				{
+					status = GameStatus::mainMenu;
+					window->close();
+					delete window;
+					return;
+				}
+				break;
+			}
+		}
+
+		a += deltatime;
+
+		if (a > 0.3)
+		{
+			if (a > 3)
+				fadecolor *= 1 + (deltatime * 8);
+			else
+				fadecolor *= 1 - (deltatime * 2);
+		}
+		if (fadecolor >= 255)
+			fadecolor = 255;
+		logo.setColor(sf::Color(255, 255, 255, -fadecolor));
+
+		window->clear();
+		window->draw(logo);
+		window->display();
+
+		if (a >= 3.8)
+		{
+			status = GameStatus::mainMenu;
+			window->close();
+			delete window;
+			return;
 		}
 	}
 }
 
 void Game::mainMenu()
 {
+	if (first)
+	{
+		window = new sf::RenderWindow(sf::VideoMode(672, 900), "Brick the Break", sf::Style::None);
+		first = false;
+	}
 	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(window->getSize()));
 	window->setView(view);
 	sf::Text text[2];
@@ -403,7 +485,7 @@ void Game::game()
 				{
 					for (int i = 0; i < 3; i++)
 					{
-						Ball* b = new Ball(p->x, p->y - 22);
+						Ball* b = new Ball(p->x, p->y - 25);
 						temp_entities->push_back(b);
 					}
 					break;
