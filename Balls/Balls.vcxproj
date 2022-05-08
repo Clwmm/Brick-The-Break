@@ -163,15 +163,20 @@
     <ClInclude Include="MapGenerator.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\Balls\icon.ico" />
     <Image Include="res\ball.png" />
     <Image Include="res\box.png" />
     <Image Include="res\p.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="res\notalot35.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Balls.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
