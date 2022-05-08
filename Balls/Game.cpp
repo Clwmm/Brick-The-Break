@@ -127,6 +127,9 @@ void Game::start()
 		case GameStatus::chooselevel:
 			chooselevel();
 			break;
+		case GameStatus::credits:
+			credits();
+			break;
 		case GameStatus::game:
 			game();
 			break;
@@ -136,6 +139,7 @@ void Game::start()
 
 void Game::logoloading()
 {
+	window = new sf::RenderWindow(sf::VideoMode(670, 200), "Brick the Break", sf::Style::None);
 	//window = new sf::RenderWindow(sf::VideoMode(670, 200), "Brick the Break", sf::Style::None);
 	float a = 0;
 	float fadecolor = 255;
@@ -144,9 +148,9 @@ void Game::logoloading()
 	logo.setOrigin(sf::Vector2f(logo.getTexture()->getSize().x / 2, logo.getTexture()->getSize().y / 2));
 	logo.setPosition(window->getSize().x / 2, window->getSize().y / 2);
 
-	/*window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	window->setFramerateLimit(240);
-	window->display();*/
+	window->display();
 
 	sf::Event evnt;
 
@@ -217,12 +221,13 @@ void Game::mainMenu()
 	if (first)
 	{
 		window = new sf::RenderWindow(sf::VideoMode(672, 900), "Brick the Break", sf::Style::None);
+		window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 		first = false;
 	}
 	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(window->getSize()));
 	window->setView(view);
-	sf::Text text[2];
-	for (int i = 0; i < 2; i++)
+	sf::Text text[3];
+	for (int i = 0; i < 3; i++)
 	{
 		text[i].setCharacterSize(102);
 		text[i].setFont(*font);
@@ -230,7 +235,8 @@ void Game::mainMenu()
 		text[i].setPosition(view.getCenter().x - 51, view.getCenter().y + (i * 105) - 154);
 	}
 	text[0].setString("Play");
-	text[1].setString("Exit");
+	text[1].setString("Credits");
+	text[2].setString("Exit");
 
 	sf::Event evnt;
 
@@ -244,26 +250,45 @@ void Game::mainMenu()
 				close = true;
 				return;
 			case sf::Event::KeyPressed:
-				if (evnt.key.code == sf::Keyboard::Down)
-					if (mmstatus == MainMenuStatus::play)
-						mmstatus = MainMenuStatus::exit;
-				if (evnt.key.code == sf::Keyboard::Up)
-					if (mmstatus == MainMenuStatus::exit)
-						mmstatus = MainMenuStatus::play;
-				if (evnt.key.code == sf::Keyboard::Enter)
+				switch (evnt.key.code)
 				{
+				case sf::Keyboard::Down:
+					switch (mmstatus)
+					{
+					case MainMenuStatus::play:
+						mmstatus = MainMenuStatus::credits;
+						break;
+					case MainMenuStatus::credits:
+						mmstatus = MainMenuStatus::exit;
+						break;
+					}
+					break;
+				case sf::Keyboard::Up:
+					switch (mmstatus)
+					{
+					case MainMenuStatus::credits:
+						mmstatus = MainMenuStatus::play;
+						break;
+					case MainMenuStatus::exit:
+						mmstatus = MainMenuStatus::credits;
+						break;
+					}
+					break;
+				case sf::Keyboard::Enter:
 					switch (mmstatus)
 					{
 					case MainMenuStatus::play:
 						status = GameStatus::chooselevel;
 						return;
+					case MainMenuStatus::credits:
+						status = GameStatus::credits;
+						return;
 					case MainMenuStatus::exit:
 						close = true;
 						return;
 					}
-				}
-				if (evnt.key.code == sf::Keyboard::Escape)
-				{
+					break;
+				case sf::Keyboard::Escape:
 					close = true;
 					return;
 				}
@@ -275,15 +300,22 @@ void Game::mainMenu()
 		case MainMenuStatus::play:
 			text[0].setFillColor(sf::Color(30, 133, 159));
 			text[1].setFillColor(sf::Color(0, 45, 69));
+			text[2].setFillColor(sf::Color(0, 45, 69));
+			break;
+		case MainMenuStatus::credits:
+			text[0].setFillColor(sf::Color(0, 45, 69));
+			text[1].setFillColor(sf::Color(30, 133, 159));
+			text[2].setFillColor(sf::Color(0, 45, 69));
 			break;
 		case MainMenuStatus::exit:
 			text[0].setFillColor(sf::Color(0, 45, 69));
-			text[1].setFillColor(sf::Color(30, 133, 159));
+			text[1].setFillColor(sf::Color(0, 45, 69));
+			text[2].setFillColor(sf::Color(30, 133, 159));
 			break;
 		}
 
 		window->clear();
-		for (int i = 0; i < 2; i++)	window->draw(text[i]);
+		for (int i = 0; i < 3; i++)	window->draw(text[i]);
 		window->display();
 	}
 }
@@ -349,6 +381,43 @@ void Game::chooselevel()
 		window->clear();
 		for (int i = 0; i < 9; i++)	window->draw(text[i]);
 		window->display();
+	}
+}
+
+void Game::credits()
+{
+	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(window->getSize()));
+	window->setView(view);
+	sf::Text text;
+
+	text.setString("Klw_M Project\ngithub.com/Clwmm");
+
+	text.setCharacterSize(102);
+	text.setFont(*font);
+	text.setFillColor(sf::Color(30, 133, 159));
+	text.setPosition(view.getCenter().x - 295, view.getCenter().y - 102);
+
+	sf::Event evnt;
+
+	while (window->isOpen())
+	{
+		while (window->pollEvent(evnt))
+		{
+			switch (evnt.type)
+			{
+			case sf::Event::Closed:
+				close = true;
+				return;
+			case sf::Event::KeyPressed:
+				status = GameStatus::mainMenu;
+				return;
+			}
+		}
+
+		window->clear();
+		window->draw(text);
+		window->display();
+
 	}
 }
 
@@ -672,10 +741,15 @@ void Game::renderingthread()
 	} 
 }
 
-Game::Game(sf::RenderWindow& _window)
+Game::Game()
 {
-	window = &_window;
-
 	if (!font->loadFromFile("res/notalot35.ttf"))
 		close = true;
+	if (!icon.loadFromFile("res/icon.png"))
+		close = true;
+}
+
+Game::~Game()
+{
+	delete window;
 }

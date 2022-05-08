@@ -6,8 +6,8 @@
 #include "Player.h"
 #include "Ball.h"
 
-enum class GameStatus { logo, mainMenu, chooselevel, game};
-enum class MainMenuStatus { play, exit };
+enum class GameStatus { logo, mainMenu, chooselevel, credits, game};
+enum class MainMenuStatus { play, credits, exit };
 enum class End { win, lose, normal};
 
 class Game
@@ -18,6 +18,7 @@ private:
 	MainMenuStatus mmstatus = MainMenuStatus::play;
 	End endstatus = End::normal;
 	sf::Font* font = new sf::Font;
+	sf::Image icon;
 
 	std::vector<Entity*>* bals = new std::vector<Entity*>;
 	std::vector<Entity*> rend_bals;
@@ -48,9 +49,11 @@ public:
 	void logoloading();
 	void mainMenu();
 	void chooselevel(); 
+	void credits();
 	void game();
 	void renderingthread();
 public:
-	Game(sf::RenderWindow& _window);
+	Game();
+	~Game();
 };
 
