@@ -82,11 +82,11 @@
     <Image Include="res\box.png">
       <Filter>res</Filter>
     </Image>
-    <Image Include="res\p.png">
-      <Filter>res</Filter>
-    </Image>
     <Image Include="..\..\..\..\Desktop\Balls\icon.ico">
       <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\p.png">
+      <Filter>res</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

@@ -8,7 +8,7 @@ int main()
 {
 	FreeConsole();
 	srand(time(0));
-	int j = 1;
+	int i = 0;
 	Game* game = new Game();
 	while (!game->close)
 		game->start();
